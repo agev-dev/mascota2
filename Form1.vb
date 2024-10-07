@@ -119,4 +119,18 @@ Public Class Form1
 
         cargar_grid()
     End Sub
+
+    Private Sub DataGridView1_CellClick(sender As Object, e As DataGridViewCellEventArgs) Handles DataGridView1.CellClick
+
+        Dim fila As Integer
+        fila = DataGridView1.CurrentRow.Index()
+
+
+        TextBox1.Text = DataGridView1.Item(0, fila).Value
+        TextBox2.Text = DataGridView1.Item(1, fila).Value
+
+
+
+
+    End Sub
 End Class
