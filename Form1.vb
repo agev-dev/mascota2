@@ -11,15 +11,16 @@ Public Class Form1
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
+        cargar_grid()
     End Sub
 
-    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
-
-
+    Sub cargar_grid()
         Dim cnn As SqlConnection
         Dim cmd As SqlCommand
         Dim sql As String
         Dim reader As SqlDataReader
+        DataGridView1.Rows.Clear()
+
 
         sql = "SELECT * FROM Mascota"
 
@@ -29,7 +30,7 @@ Public Class Form1
             cmd = New SqlCommand(sql, cnn)
             reader = cmd.ExecuteReader()
             While reader.Read()
-                MsgBox(reader.Item(0) & "  Codigo " & reader.Item(1) & "  Nombre  ")
+                DataGridView1.Rows.Add(reader.Item("codigo"), reader.Item("nombre"))
             End While
             reader.Close()
             cmd.Dispose()
@@ -38,12 +39,9 @@ Public Class Form1
 
             MsgBox(ex.Message)
         End Try
-
-
-
-
-
     End Sub
+
+
 
     Private Sub Button2_Click(sender As Object, e As EventArgs) Handles Button2.Click
         Dim cnn As SqlConnection
@@ -51,7 +49,7 @@ Public Class Form1
         Dim sql As String
 
 
-        sql = "INSERT INTO Mascota VALUES('5','Paracas')"
+        sql = "INSERT INTO mascota VALUES(" & TextBox1.Text & ",' " & TextBox2.Text & " ' )"
 
         cnn = New SqlConnection(connetionString)
         Try
@@ -64,5 +62,61 @@ Public Class Form1
             MsgBox(ex.Message)
         End Try
 
+        cargar_grid()
+
+    End Sub
+
+    Private Sub TextBox2_TextChanged(sender As Object, e As EventArgs) Handles TextBox2.TextChanged
+
+    End Sub
+
+    Private Sub TextBox1_TextChanged(sender As Object, e As EventArgs) Handles TextBox1.TextChanged
+
+    End Sub
+
+    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
+        Dim cnn As SqlConnection
+        Dim cmd As SqlCommand
+        Dim sql As String
+
+
+        sql = "DELETE FROM mascota WHERE codigo = " & TextBox1.Text
+
+        cnn = New SqlConnection(connetionString)
+        Try
+            cnn.Open()
+            cmd = New SqlCommand(sql, cnn)
+            cmd.ExecuteNonQuery()
+            cmd.Dispose()
+            cnn.Close()
+        Catch ex As Exception
+            MsgBox(ex.Message)
+        End Try
+
+        cargar_grid()
+
+    End Sub
+
+    Private Sub Button3_Click(sender As Object, e As EventArgs) Handles Button3.Click
+        Dim cnn As SqlConnection
+        Dim cmd As SqlCommand
+        Dim sql As String
+
+
+
+        sql = "UPDATE mascota SET nombre = '" & TextBox2.Text & "' WHERE codigo = " & TextBox1.Text
+
+        cnn = New SqlConnection(connetionString)
+        Try
+            cnn.Open()
+            cmd = New SqlCommand(sql, cnn)
+            cmd.ExecuteNonQuery()
+            cmd.Dispose()
+            cnn.Close()
+        Catch ex As Exception
+            MsgBox(ex.Message)
+        End Try
+
+        cargar_grid()
     End Sub
 End Class
